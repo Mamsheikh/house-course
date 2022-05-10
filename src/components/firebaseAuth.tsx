@@ -1,16 +1,36 @@
-// import { FunctionComponent, useState, useEffect } from "react";
-// import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
+import { FunctionComponent, useState, useEffect } from "react";
+import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import firebase from "firebase/app";
 import "firebase/auth";
 
-const config = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+const firebaseAuthConfig = {
+  signInFlow: "popup",
+  signInOptions: [
+    {
+      provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+      requireDisplayName: false,
+    },
+  ],
+  signInSuccessUrl: "/",
 };
 
-export default function initFirebase() {
-  if (!firebase.apps.length) {
-    firebase.initializeApp(config);
-  }
-}
+const FirebaseAuth: FunctionComponent = () => {
+  const [renderAuth, setRenderAuth] = useState(false);
+
+  useEffect(() => {
+    setRenderAuth(true);
+  }, []);
+
+  return (
+    <div className="mt-16">
+      {renderAuth ? (
+        <StyledFirebaseAuth
+          uiConfig={firebaseAuthConfig}
+          firebaseAuth={firebase.auth()}
+        />
+      ) : null}
+    </div>
+  );
+};
+
+export default FirebaseAuth;

@@ -8,9 +8,9 @@ import {
 import { useRouter } from "next/router";
 import firebase from "firebase/app";
 import "firebase/auth";
-import initFirebase from "src/components/firebaseAuth";
+
 import { removeTokenCookie, setTokenCookie } from "./tokenCookies";
-// import {initFirebase} from "./initFirebase";
+import initFirebase from "./initFirebase";
 
 initFirebase();
 
