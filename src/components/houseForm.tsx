@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import Link from "next/link";
 // import { Image } from "cloudinary-react";
-// import { SearchBox } from "./searchBox";
+import { SearchBox } from "./searchBox";
 // import {
 //   CreateHouseMutation,
 //   CreateHouseMutationVariables,
@@ -31,6 +31,8 @@ export default function HouseForm({}: IProps) {
     IFormData
   >({ defaultValues: {} });
 
+  const address = watch("address");
+
   useEffect(() => {
     register({ name: "address" }, { required: "Please enter your address" });
     register({ name: "latitude" }, { required: true, min: -90, max: 90 });
@@ -52,7 +54,16 @@ export default function HouseForm({}: IProps) {
           Search for you address
         </label>
         {/* SEARCH FIELD */}
+        <SearchBox
+          onSelecteAddress={(address, latitude, longitude) => {
+            setValue("address", address);
+            setValue("latitude", latitude);
+            setValue("longitude", longitude);
+          }}
+          defaultValue=""
+        />
         {errors.address && <p>{errors.address.message}</p>}
+        <h2>{address}</h2>
       </div>
     </form>
   );
