@@ -26,6 +26,7 @@ interface IFormData {
 interface IProps {}
 
 export default function HouseForm({}: IProps) {
+  const [previewImage, setPreviewImage] = useState("");
   const [submiting, setSubmiting] = useState(false);
   const { register, handleSubmit, setValue, errors, watch } = useForm<
     IFormData
@@ -39,13 +40,15 @@ export default function HouseForm({}: IProps) {
     register({ name: "longitude" }, { required: true, min: -180, max: 180 });
   }, [register]);
 
-  const handleCreate = async (data: IFormData) => {};
+  const handleCreate = async (data: IFormData) => {
+    console.log(data);
+  };
 
   const onSubmit = (data: IFormData) => {
-    console.log(data);
     setSubmiting(true);
     handleCreate(data);
   };
+
   return (
     <form className="mx-auto  max-w-xl py-4" onSubmit={handleSubmit(onSubmit)}>
       <h1 className="text-xl">Add a new House</h1>
@@ -62,9 +65,85 @@ export default function HouseForm({}: IProps) {
           }}
           defaultValue=""
         />
-        {errors.address && <p>{errors.address.message}</p>}
-        <h2>{address}</h2>
+        {errors.address && (
+          <p className="text-red-500">{errors.address.message}</p>
+        )}
       </div>
+      {address && (
+        <>
+          <div className="mt-4">
+            <label
+              htmlFor="image"
+              className="p-4 border-dashed border-4 border-gray-600 block cursor-pointer"
+            >
+              Click to add image (16:9)
+            </label>
+            <input
+              id="image"
+              name="image"
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              ref={register({
+                validate: (fileList: FileList) => {
+                  if (fileList.length === 1) return true;
+                  return "Please upload one file";
+                },
+              })}
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                if (event?.target?.files?.[0]) {
+                  const file = event.target.files[0];
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    setPreviewImage(reader.result as string);
+                  };
+                  reader.readAsDataURL(file);
+                }
+              }}
+            />
+            {previewImage && (
+              <img
+                src={previewImage}
+                className="mt-4 object-cover"
+                style={{ width: "576px", height: `${(9 / 16) * 576}px` }}
+              />
+            )}
+            {errors.image && (
+              <p className="text-red-500">{errors.image.message}</p>
+            )}
+          </div>
+          <div className="mt-4">
+            <label htmlFor="bedrooms" className="block">
+              Beds
+            </label>
+            <input
+              type="number"
+              id="bedrooms"
+              name="bedrooms"
+              className="p-2"
+              ref={register({
+                required: "Please enter the number of bedrooms",
+                max: { value: 10, message: "Woah, too big of a house" },
+                min: { value: 1, message: "must have atleast 1 bedroom" },
+              })}
+            />
+            {errors.bedrooms && (
+              <p className="text-red-500">{errors.bedrooms.message}</p>
+            )}
+          </div>
+
+          <div className="mt-4">
+            <button
+              className="mr-4 bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded"
+              type="submit"
+              disabled={submiting}
+            >
+              Save
+            </button>
+            <Link href="/">Cancel</Link>
+          </div>
+        </>
+      )}
     </form>
   );
 }
