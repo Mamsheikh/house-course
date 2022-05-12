@@ -47,15 +47,15 @@ class HouseInput {
 @ObjectType()
 class House {
   @Field(() => ID)
-  id!: number;
+  id!: string;
 
   @Field(() => String)
   userId!: string;
 
-  @Field(() => Float, { nullable: true })
+  @Field(() => Float)
   latitude!: number;
 
-  @Field(() => Float, { nullable: true })
+  @Field(() => Float)
   longitude!: number;
 
   @Field(() => Int)
@@ -71,6 +71,23 @@ class House {
   publicId(): string {
     const parts = this.image.split("/");
     return parts[parts.length - 1];
+  }
+
+  @Field(() => [House])
+  async nearBy(@Ctx() ctx: Context) {
+    const bounds = getBoundsOfDistance(
+      { latitude: this.latitude, longitude: this.longitude },
+      15000
+    );
+
+    return ctx.prisma.house.findMany({
+      where: {
+        latitude: { gte: bounds[0].latitude, lte: bounds[1].latitude },
+        longitude: { gte: bounds[0].longitude, lte: bounds[1].longitude },
+        id: { not: { equals: this.id } },
+      },
+      take: 25,
+    });
   }
 }
 

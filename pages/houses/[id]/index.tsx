@@ -17,6 +17,11 @@ const SHOW_HOUSE_QUERY = gql`
       bedrooms
       address
       image
+      nearBy {
+        id
+        latitude
+        longitude
+      }
     }
   }
 `;
@@ -64,7 +69,7 @@ function HouseData({ id }: { id: string }) {
             <p>{house?.bedrooms} bedrooms 🏠 </p>
           </div>
           <div className="sm:w-full md:w-1/2">
-            {house && <SingleMap house={house} />}
+            {house && <SingleMap house={house} nearBy={house.nearBy} />}
           </div>
         </div>
       }

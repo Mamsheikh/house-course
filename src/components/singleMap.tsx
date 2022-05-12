@@ -5,17 +5,18 @@ import "mapbox-gl/dist/mapbox-gl.css";
 
 interface IHouse {
   id: string;
-  latitude: number;
   longitude: number;
+  latitude: number;
 }
 
 interface IProps {
   house: IHouse;
+  nearBy: IHouse[];
 }
-export default function SingleMap({ house }: IProps) {
+export default function SingleMap({ house, nearBy }: IProps) {
   const [viewport, setViewport] = useState({
-    latitude: house.latitude,
-    longitude: house.longitude,
+    latitude: house?.latitude,
+    longitude: house?.longitude,
     zoom: 13,
   });
 
@@ -36,8 +37,8 @@ export default function SingleMap({ house }: IProps) {
         </div>
 
         <Marker
-          latitude={house.latitude}
-          longitude={house.longitude}
+          latitude={house.latitude!}
+          longitude={house.longitude!}
           offsetLeft={-15}
           offsetTop={-15}
         >
@@ -48,6 +49,21 @@ export default function SingleMap({ house }: IProps) {
             <img src="/home-color.svg" className="w-8" alt="selected house" />
           </button>
         </Marker>
+        {nearBy.map((near) => (
+          <Marker
+            key={near.id}
+            latitude={near.latitude}
+            longitude={near.longitude}
+            offsetLeft={-15}
+            offsetTop={-15}
+          >
+            <Link href={`/houses/${near.id}`}>
+              <a style={{ width: "30px", height: "30px", fontSize: "30px" }}>
+                <img src="/home-solid.svg" className="w-8" alt="nearby house" />
+              </a>
+            </Link>
+          </Marker>
+        ))}
       </ReactMapGL>
     </div>
   );

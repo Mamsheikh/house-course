@@ -13,8 +13,9 @@ type House {
   bedrooms: Int!
   id: ID!
   image: String!
-  latitude: Float
-  longitude: Float
+  latitude: Float!
+  longitude: Float!
+  nearBy: [House!]!
   publicId: String!
   userId: String!
 }
