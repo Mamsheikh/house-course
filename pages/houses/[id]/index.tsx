@@ -4,7 +4,7 @@ import { useQuery, gql } from "@apollo/client";
 import Layout from "src/components/layout";
 import { ShowHouseVariables, ShowHouse } from "src/generated/ShowHouse";
 // import HouseNav from "src/components/houseNav";
-// import SingleMap from "src/components/singleMap";
+import SingleMap from "src/components/singleMap";
 
 const SHOW_HOUSE_QUERY = gql`
   query ShowHouse($id: String!) {
@@ -63,7 +63,9 @@ function HouseData({ id }: { id: string }) {
             />
             <p>{house?.bedrooms} bedrooms 🏠 </p>
           </div>
-          <div className="sm:w-full md:w-1/2">Single Map</div>
+          <div className="sm:w-full md:w-1/2">
+            {house && <SingleMap house={house} />}
+          </div>
         </div>
       }
     />
