@@ -103,7 +103,7 @@ export default function HouseForm({}: IProps) {
             image: imageData.secure_url,
             coordinates: {
               latitude: data.latitude,
-              longtitude: data.longitude,
+              longitude: data.longitude,
             },
             bedrooms: parseInt(data.bedrooms),
           },

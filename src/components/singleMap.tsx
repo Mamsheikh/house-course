@@ -31,9 +31,10 @@ export default function SingleMap({ house }: IProps) {
         scrollZoom={false}
         minZoom={8}
       >
-        <div className="abosolute top-0 left-0 p-4">
+        <div className="absolute top-0 left-0 p-4">
           <NavigationControl showCompass={false} />
         </div>
+
         <Marker
           latitude={house.latitude}
           longitude={house.longitude}
