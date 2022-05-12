@@ -26,7 +26,7 @@ class CoordinatesInput {
   @Min(-180)
   @Max(180)
   @Field(() => Float)
-  longtitude!: number;
+  longitude!: number;
 }
 
 @InputType()
@@ -52,11 +52,11 @@ class House {
   @Field(() => String)
   userId!: string;
 
-  @Field(() => String)
+  @Field(() => Float, { nullable: true })
   latitude!: number;
 
-  @Field(() => Float)
-  longtitude!: number;
+  @Field(() => Float, { nullable: true })
+  longitude!: number;
 
   @Field(() => Int)
   bedrooms!: number;
@@ -76,6 +76,11 @@ class House {
 
 @Resolver()
 export class HouseResolver {
+  @Query(() => House, { nullable: true })
+  async house(@Arg("id") id: string, @Ctx() ctx: Context) {
+    return await ctx.prisma.house.findUnique({ where: { id: id } });
+  }
+
   @Authorized()
   @Mutation(() => House, { nullable: true })
   async createHouse(
@@ -88,7 +93,7 @@ export class HouseResolver {
         image: input.image,
         address: input.address,
         latitude: input.coordinates.latitude,
-        longitude: input.coordinates.longtitude,
+        longitude: input.coordinates.longitude,
         bedrooms: input.bedrooms,
       },
     });

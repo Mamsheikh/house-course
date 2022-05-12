@@ -9,7 +9,7 @@
 
 export interface CoordinatesInput {
   latitude: number;
-  longtitude: number;
+  longitude: number;
 }
 
 export interface HouseInput {

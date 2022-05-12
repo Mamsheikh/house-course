@@ -5,7 +5,7 @@
 
 input CoordinatesInput {
   latitude: Float!
-  longtitude: Float!
+  longitude: Float!
 }
 
 type House {
@@ -13,8 +13,8 @@ type House {
   bedrooms: Int!
   id: ID!
   image: String!
-  latitude: String!
-  longtitude: Float!
+  latitude: Float
+  longitude: Float
   publicId: String!
   userId: String!
 }
@@ -38,4 +38,5 @@ type Mutation {
 
 type Query {
   hello: String!
+  house(id: String!): House
 }
