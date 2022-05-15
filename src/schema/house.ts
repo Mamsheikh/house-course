@@ -161,4 +161,24 @@ export class HouseResolver {
       },
     });
   }
+
+  @Authorized()
+  @Mutation(() => Boolean, { nullable: false })
+  async deleteHouse(
+    @Arg("id") id: string,
+    @Ctx() ctx: AuthorizedContext
+  ): Promise<boolean> {
+    const house = await ctx.prisma.house.findUnique({
+      where: { id },
+    });
+
+    if (!house || house.userId !== ctx.uid) return false;
+
+    await ctx.prisma.house.delete({
+      where: {
+        id,
+      },
+    });
+    return true;
+  }
 }
