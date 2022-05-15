@@ -135,4 +135,30 @@ export class HouseResolver {
       take: 50,
     });
   }
+
+  @Authorized()
+  @Mutation(() => House, { nullable: true })
+  async updateHouse(
+    @Arg("id") id: string,
+    @Arg("input") input: HouseInput,
+    @Ctx() ctx: AuthorizedContext
+  ) {
+    const houseId = id;
+    const house = await ctx.prisma.house.findUnique({ where: { id: houseId } });
+
+    if (!house || house.userId !== ctx.uid) return null;
+
+    return await ctx.prisma.house.update({
+      where: {
+        id: houseId,
+      },
+      data: {
+        image: input.image,
+        address: input.address,
+        latitude: input.coordinates.latitude,
+        longitude: input.coordinates.longitude,
+        bedrooms: input.bedrooms,
+      },
+    });
+  }
 }
